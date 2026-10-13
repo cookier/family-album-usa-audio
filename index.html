@@ -1264,6 +1264,15 @@ body.no-cn .line-text-cn { display: none; }
     };
   }
 
+  function introStartTime() {
+    // 片头结束点：第一句台词开始前 1 秒（缓冲）
+    if (!currentEpisode) return 0;
+    const validActs = currentEpisode.acts.filter(a => a.lines.length > 0);
+    const act = validActs[currentActIdx];
+    if (!act || !act.lines.length) return 0;
+    return Math.max(0, act.lines[0].t - 1);
+  }
+
   function togglePlay() {
     const el = document.getElementById('audioEl');
     if (!el || !el.src) return;
@@ -1271,6 +1280,9 @@ body.no-cn .line-text-cn { display: none; }
       el.pause();
       audioPlaying = false;
     } else {
+      // 跳过片头：仍处于片头区间、或播完后重放时，从第一句台词前 1 秒开始播
+      const intro = introStartTime();
+      if (el.currentTime < intro || el.ended) el.currentTime = intro;
       el.play().catch(() => {});
       audioPlaying = true;
     }
