@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>走遍美国 Family Album U.S.A.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-alt: #f6f5f4;
+  --text: rgba(0,0,0,0.95);
+  --text-secondary: #615d59;
+  --accent: #0075de;
+  --accent-hover: #005fb3;
+  --border: rgba(0,0,0,0.1);
+  --border-strong: rgba(0,0,0,0.2);
+  --shadow: 0 1px 2px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04), 0 6px 20px rgba(0,0,0,0.03);
+  --shadow-hover: 0 2px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06), 0 8px 30px rgba(0,0,0,0.05);
+  --radius: 12px;
+  --radius-sm: 4px;
+  --pill-bg: #f2f9ff;
+  --pill-text: #097fe8;
+  --header-h: 56px;
+  --max-w: 1120px;
+  --progress-bar: #0075de;
+  --progress-bg: rgba(0,117,222,0.1);
+  --highlight-bg: #f0f7ff;
+  --line-hover: #fafafa;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ===== HEADER ===== */
+.site-header {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  height: var(--header-h);
+}
+.header-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.logo {
+  display: flex; align-items: baseline; gap: 8px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.logo-cn {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.5px;
+}
+.logo-en {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+.nav-links {
+  display: flex;
+  gap: 4px;
+  list-style: none;
+}
+.nav-links a {
+  display: block;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  transition: background 0.15s, color 0.15s;
+}
+.nav-links a:hover, .nav-links a.active {
+  background: rgba(0,0,0,0.04);
+  color: var(--text);
+  text-decoration: none;
+}
+.header-search {
+  flex: 1;
+  max-width: 280px;
+  margin-left: auto;
+}
+.header-search input {
+  width: 100%;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  background: var(--bg-alt);
+  color: var(--text);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.header-search input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(0,117,222,0.15);
+  background: var(--bg);
+}
+.header-search input::placeholder { color: var(--text-secondary); opacity: 0.6; }
+
+.hamburger {
+  display: none;
+  width: 36px; height: 36px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px;
+}
+.hamburger span {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--text);
+  border-radius: 1px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ===== MOBILE NAV ===== */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  top: var(--header-h); left: 0; right: 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 24px 16px;
+  z-index: 99;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+.mobile-nav.open { display: block; }
+.mobile-nav a {
+  display: block;
+  padding: 10px 0;
+  font-size: 15px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+}
+.mobile-nav a:last-child { border-bottom: none; }
+.mobile-nav a:hover { color: var(--text); text-decoration: none; }
+.mobile-search {
+  padding: 8px 0 12px;
+}
+.mobile-search input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  background: var(--bg-alt);
+  color: var(--text);
+}
+.mobile-search input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(0,117,222,0.15);
+}
+
+/* ===== HERO ===== */
+.hero {
+  padding: 80px 24px 64px;
+  text-align: center;
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
+}
+.hero-inner {
+  max-width: 600px;
+  margin: 0 auto;
+}
+.hero h1 {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.hero .subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  font-weight: 400;
+}
+.hero .desc {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  line-height: 1.7;
+}
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+.hero-stat {
+  text-align: center;
+}
+.hero-stat .num {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+}
+.hero-stat .label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+.btn-primary {
+  display: inline-block;
+  padding: 8px 24px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-primary:hover {
+  background: var(--accent-hover);
+  text-decoration: none;
+}
+
+/* ===== PROGRESS BAR (hero) ===== */
+.hero-progress {
+  margin-top: 24px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.hero-progress-bar {
+  max-width: 400px;
+  margin: 8px auto 0;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.hero-progress-fill {
+  height: 100%;
+  background: var(--progress-bar);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+/* ===== MAIN ===== */
+.main-content {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* ===== EPISODE GRID ===== */
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.section-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+.section-header .count {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.episode-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.episode-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: box-shadow 0.2s, border-color 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.episode-card:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border-strong);
+}
+.ep-card-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.ep-num {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--pill-bg);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+.ep-audio-badge {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--pill-text);
+  background: var(--pill-bg);
+  padding: 2px 6px;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+.ep-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+  line-height: 1.4;
+}
+.ep-title-cn {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+.ep-meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.ep-progress-bar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: transparent;
+}
+.ep-progress-fill {
+  height: 100%;
+  background: var(--progress-bar);
+  transition: width 0.3s;
+}
+.ep-complete-badge {
+  position: absolute;
+  top: 12px; right: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #0a7b3e;
+  background: #edfcf2;
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+/* ===== EPISODE DETAIL ===== */
+.detail-view {
+  display: none;
+}
+.detail-view.active {
+  display: block;
+}
+.grid-view.hidden {
+  display: none;
+}
+
+.detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  padding: 4px 0;
+}
+.detail-back:hover { color: var(--text); }
+.detail-back svg { width: 16px; height: 16px; }
+
+.detail-header {
+  margin-bottom: 24px;
+}
+.detail-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.detail-header .detail-subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+/* Act Tabs */
+.act-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.act-tab {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1px;
+}
+.act-tab:hover { color: var(--text); }
+.act-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.act-tab .tab-lines {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+/* Audio Player */
+.audio-player {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+.audio-player.no-audio {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  padding: 20px;
+}
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.play-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.play-btn:hover { background: var(--accent-hover); }
+.play-btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+.player-bar-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.player-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+}
+.player-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.1s linear;
+  position: relative;
+}
+.player-bar-fill::after {
+  content: '';
+  position: absolute;
+  right: -5px; top: -3px;
+  width: 10px; height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.player-bar:hover .player-bar-fill::after { opacity: 1; }
+.player-time {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  min-width: 72px;
+  text-align: center;
+}
+
+/* Speed control */
+.speed-btn {
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.15s, border-color 0.15s;
+}
+.speed-btn:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+/* Script Panel */
+.script-panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.script-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.script-list {
+  max-height: 480px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+.script-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: background 0.1s;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.script-line:last-child { border-bottom: none; }
+.script-line:hover { background: var(--line-hover); }
+.script-line.active {
+  background: var(--highlight-bg);
+}
+.script-line.active .line-text {
+  color: var(--text);
+  font-weight: 500;
+}
+.line-time {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  min-width: 42px;
+  padding-top: 2px;
+  flex-shrink: 0;
+  user-select: none;
+}
+.line-text {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.5;
+}
+.script-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+/* Complete Button */
+.complete-section {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.btn-complete {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-complete:hover {
+  background: var(--bg-alt);
+}
+.btn-complete.completed {
+  background: #edfcf2;
+  color: #0a7b3e;
+  border-color: #b7e4c7;
+}
+.complete-status {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* ===== ABOUT SECTION ===== */
+.about-section {
+  display: none;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+.about-section.active { display: block; }
+.about-section h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+.about-section h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 28px 0 10px;
+  color: var(--text);
+}
+.about-section p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  margin-bottom: 12px;
+}
+.about-section ul {
+  padding-left: 20px;
+  margin-bottom: 12px;
+}
+.about-section li {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+.about-section .credit-link {
+  font-size: 14px;
+  color: var(--accent);
+}
+
+/* ===== FOOTER ===== */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* ===== SEARCH RESULTS ===== */
+.no-results {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+  font-size: 15px;
+  display: none;
+}
+.no-results.visible { display: block; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .episode-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .episode-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav-links, .header-search { display: none; }
+  .hamburger { display: flex; }
+  .hero h1 { font-size: 32px; }
+  .hero { padding: 48px 24px 48px; }
+  .hero-stats { gap: 24px; }
+  .hero-stat .num { font-size: 24px; }
+}
+@media (max-width: 480px) {
+  .episode-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 28px; }
+  .main-content { padding: 24px 16px 60px; }
+  .player-controls { flex-wrap: wrap; }
+  .player-bar-wrap { width: 100%; order: 10; }
+  .script-list { max-height: 360px; }
+}
+
+/* Scrollbar */
+.script-list::-webkit-scrollbar { width: 6px; }
+.script-list::-webkit-scrollbar-track { background: transparent; }
+.script-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.script-list::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+/* Focus visible */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Loading */
+.loading-skeleton {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+@media (max-width: 1024px) { .loading-skeleton { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 768px) { .loading-skeleton { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .loading-skeleton { grid-template-columns: 1fr; } }
+.skeleton-card {
+  height: 160px;
+  background: var(--bg-alt);
+  border-radius: var(--radius);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo" id="logoBtn" tabindex="0" role="button" aria-label="回到首页">
+      <span class="logo-cn">走遍美国</span>
+      <span class="logo-en">Family Album U.S.A.</span>
+    </div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#" class="nav-link active" data-view="home">首页</a></li>
+        <li><a href="#" class="nav-link" data-view="all">全部课程</a></li>
+        <li><a href="#" class="nav-link" data-view="about">关于</a></li>
+      </ul>
+    </nav>
+    <div class="header-search">
+      <input type="text" id="searchInput" placeholder="搜索课程..." aria-label="搜索课程">
+    </div>
+    <button class="hamburger" id="hamburgerBtn" aria-label="菜单" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#" class="mobile-link" data-view="home">首页</a>
+  <a href="#" class="mobile-link" data-view="all">全部课程</a>
+  <a href="#" class="mobile-link" data-view="about">关于</a>
+  <div class="mobile-search">
+    <input type="text" id="mobileSearchInput" placeholder="搜索课程..." aria-label="搜索课程">
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="heroSection">
+  <div class="hero-inner">
+    <h1>走遍美国</h1>
+    <p class="subtitle">Family Album U.S.A. — 经典英语情景教学</p>
+    <p class="desc">26集78课时，沉浸式美国家庭生活场景，跟着Stewart一家学地道英语。</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="num">26</div>
+        <div class="label">集</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">78</div>
+        <div class="label">课时</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">4000+</div>
+        <div class="label">句台词</div>
+      </div>
+    </div>
+    <button class="btn-primary" id="startBtn">开始学习</button>
+    <div class="hero-progress" id="heroProgress">
+      <span id="progressText">已完成 0/26 集</span>
+      <div class="hero-progress-bar"><div class="hero-progress-fill" id="progressFill"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- GRID VIEW -->
+<div class="main-content grid-view" id="gridView">
+  <div class="section-header">
+    <h2>全部课程</h2>
+    <span class="count" id="gridCount"></span>
+  </div>
+  <div class="episode-grid" id="episodeGrid"></div>
+  <div class="no-results" id="noResults">没有找到匹配的课程</div>
+  <div class="loading-skeleton" id="loadingSkeleton">
+    <div class="skeleton-card"></div><div class="skeleton-card"></div>
+    <div class="skeleton-card"></div><div class="skeleton-card"></div>
+    <div class="skeleton-card"></div><div class="skeleton-card"></div>
+    <div class="skeleton-card"></div><div class="skeleton-card"></div>
+  </div>
+</div>
+
+<!-- DETAIL VIEW -->
+<div class="main-content detail-view" id="detailView">
+  <button class="detail-back" id="backBtn" aria-label="返回课程列表">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    返回课程列表
+  </button>
+  <div class="detail-header">
+    <h2 id="detailTitle"></h2>
+    <div class="detail-subtitle" id="detailSubtitle"></div>
+  </div>
+  <div class="act-tabs" id="actTabs"></div>
+  <div class="audio-player" id="audioPlayer">
+    <div class="player-controls">
+      <button class="play-btn" id="playBtn" aria-label="播放">
+        <svg id="playIcon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"></polygon></svg>
+      </button>
+      <div class="player-bar-wrap">
+        <div class="player-bar" id="playerBar">
+          <div class="player-bar-fill" id="playerFill"></div>
+        </div>
+        <span class="player-time" id="playerTime">0:00 / 0:00</span>
+      </div>
+      <button class="speed-btn" id="speedBtn" aria-label="播放速度">1.0x</button>
+    </div>
+    <audio id="audioEl" preload="metadata"></audio>
+  </div>
+  <div class="script-panel">
+    <div class="script-header">
+      <span>台词</span>
+      <span id="lineCount"></span>
+    </div>
+    <div class="script-list" id="scriptList"></div>
+  </div>
+  <div class="complete-section">
+    <button class="btn-complete" id="completeBtn">标记为已完成</button>
+    <span class="complete-status" id="completeStatus"></span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about-section" id="aboutSection">
+  <h2>关于走遍美国</h2>
+  <p>《走遍美国》（Family Album U.S.A.）是一部经典的英语情景教学节目，由美国麦克米伦公司和上海海文音像出版社联合制作。节目以纽约一个四代同堂的美国家庭 Stewart 一家的生活为主线，通过生动的日常对话场景，帮助学习者掌握实用的美式英语。</p>
+  <p>原版节目共33集，本站收录了其中26集的内容，涵盖了主要的故事情节和语言学习要点。</p>
+
+  <h3>学习建议</h3>
+  <ul>
+    <li>先完整听一遍，了解故事情节和整体语境</li>
+    <li>对照台词逐句精听，注意语音语调和连读</li>
+    <li>跟读模仿，尽量贴近原声的节奏和发音</li>
+    <li>遮住英文，尝试听写，检查自己的听力理解</li>
+    <li>每天一课，坚持积累，三个月即可完成全部课程</li>
+  </ul>
+
+  <h3>数据来源</h3>
+  <p>音频和台词数据来自以下开源项目：</p>
+  <p><a href="https://github.com/littleflute/Family-Album-USA" class="credit-link" target="_blank" rel="noopener">littleflute/Family-Album-USA</a></p>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  走遍美国 Family Album U.S.A. — 英语学习资源，仅供学习使用
+</footer>
+
+<script>
+(function() {
+  'use strict';
+
+  // ===== STATE =====
+  let episodes = [];
+  let meta = null;
+  let currentView = 'home'; // home | detail | about
+  let currentEpisode = null;
+  let currentActIdx = 0;
+  let searchQuery = '';
+  let audioPlaying = false;
+  let activeLineIdx = -1;
+  let animFrame = null;
+
+  const SPEEDS = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
+  let speedIdx = 2; // 1.0x
+
+  // ===== PROGRESS (localStorage) =====
+  const STORAGE_KEY = 'family_album_progress';
+  function loadProgress() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { completed: {} };
+    } catch(e) { return { completed: {} }; }
+  }
+  function saveProgress(p) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); } catch(e) {}
+  }
+  function isCompleted(id) {
+    return !!loadProgress().completed[id];
+  }
+  function toggleComplete(id) {
+    const p = loadProgress();
+    if (p.completed[id]) { delete p.completed[id]; }
+    else { p.completed[id] = Date.now(); }
+    saveProgress(p);
+  }
+  function completedCount() {
+    return Object.keys(loadProgress().completed).length;
+  }
+
+  // ===== DOM REFS =====
+  const $ = id => document.getElementById(id);
+  const logoBtn = $('logoBtn');
+  const hamburgerBtn = $('hamburgerBtn');
+  const mobileNav = $('mobileNav');
+  const searchInput = $('searchInput');
+  const mobileSearchInput = $('mobileSearchInput');
+  const heroSection = $('heroSection');
+  const startBtn = $('startBtn');
+  const progressText = $('progressText');
+  const progressFill = $('progressFill');
+  const gridView = $('gridView');
+  const episodeGrid = $('episodeGrid');
+  const gridCount = $('gridCount');
+  const noResults = $('noResults');
+  const loadingSkeleton = $('loadingSkeleton');
+  const detailView = $('detailView');
+  const backBtn = $('backBtn');
+  const detailTitle = $('detailTitle');
+  const detailSubtitle = $('detailSubtitle');
+  const actTabs = $('actTabs');
+  const audioPlayer = $('audioPlayer');
+  const audioEl = $('audioEl');
+  const playBtn = $('playBtn');
+  const playIcon = $('playIcon');
+  const playerBar = $('playerBar');
+  const playerFill = $('playerFill');
+  const playerTime = $('playerTime');
+  const speedBtn = $('speedBtn');
+  const scriptList = $('scriptList');
+  const lineCountEl = $('lineCount');
+  const completeBtn = $('completeBtn');
+  const completeStatus = $('completeStatus');
+  const aboutSection = $('aboutSection');
+
+  const navLinks = document.querySelectorAll('.nav-link');
+  const mobileLinks = document.querySelectorAll('.mobile-link');
+
+  // ===== FORMAT TIME =====
+  function fmtTime(s) {
+    if (!isFinite(s) || s < 0) s = 0;
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  // ===== FETCH DATA =====
+  async function loadData() {
+    try {
+      const res = await fetch('episodes.json');
+      const data = await res.json();
+      meta = data.meta;
+      episodes = data.episodes;
+      loadingSkeleton.style.display = 'none';
+      renderGrid();
+      updateProgress();
+    } catch(e) {
+      loadingSkeleton.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--text-secondary);padding:40px;">加载失败，请刷新页面重试。</p>';
+    }
+  }
+
+  // ===== NAVIGATION =====
+  function setView(view) {
+    currentView = view;
+    navLinks.forEach(l => l.classList.toggle('active', l.dataset.view === view));
+    heroSection.style.display = view === 'home' ? '' : 'none';
+    gridView.style.display = (view === 'home' || view === 'all') ? '' : 'none';
+    gridView.classList.toggle('hidden', view === 'detail' || view === 'about');
+    detailView.classList.toggle('active', view === 'detail');
+    aboutSection.classList.toggle('active', view === 'about');
+    if (view !== 'detail') {
+      stopAudio();
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ===== RENDER GRID =====
+  function renderGrid() {
+    const q = searchQuery.toLowerCase().trim();
+    let filtered = episodes;
+    if (q) {
+      filtered = episodes.filter(ep =>
+        ep.title.toLowerCase().includes(q) ||
+        ep.titleCn.includes(q) ||
+        ('ep' + ep.id).includes(q) ||
+        (ep.id + '').includes(q)
+      );
+    }
+    gridCount.textContent = q ? `${filtered.length} 个结果` : `${episodes.length} 集`;
+    noResults.classList.toggle('visible', filtered.length === 0);
+    episodeGrid.style.display = filtered.length === 0 ? 'none' : '';
+
+    const frag = document.createDocumentFragment();
+    filtered.forEach(ep => {
+      const card = document.createElement('article');
+      card.className = 'episode-card';
+      card.tabIndex = 0;
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-label', `第${ep.id}集 ${ep.titleCn}`);
+
+      const completed = isCompleted(ep.id);
+      const hasAudio = ep.hasAudio;
+      const actCount = ep.acts.filter(a => a.lines.length > 0).length;
+
+      card.innerHTML = `
+        <div class="ep-card-top">
+          <span class="ep-num">第${ep.id}集</span>
+          ${hasAudio ? '<span class="ep-audio-badge">有音频</span>' : ''}
+        </div>
+        ${completed ? '<span class="ep-complete-badge">已完成</span>' : ''}
+        <div class="ep-title">${ep.title}</div>
+        <div class="ep-title-cn">${ep.titleCn}</div>
+        <div class="ep-meta">${actCount} 个段落 · ${ep.totalLines || 0} 句台词</div>
+        <div class="ep-progress-bar"><div class="ep-progress-fill" style="width:${completed ? 100 : 0}%"></div></div>
+      `;
+
+      card.addEventListener('click', () => openEpisode(ep.id));
+      card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openEpisode(ep.id); } });
+      frag.appendChild(card);
+    });
+    episodeGrid.innerHTML = '';
+    episodeGrid.appendChild(frag);
+  }
+
+  function updateProgress() {
+    const c = completedCount();
+    const total = episodes.length || 26;
+    progressText.textContent = `已完成 ${c}/${total} 集`;
+    progressFill.style.width = (c / total * 100) + '%';
+  }
+
+  // ===== OPEN EPISODE =====
+  function openEpisode(id) {
+    const ep = episodes.find(e => e.id === id);
+    if (!ep) return;
+    currentEpisode = ep;
+    currentActIdx = 0;
+    activeLineIdx = -1;
+
+    setView('detail');
+    detailTitle.textContent = `第${ep.id}集 · ${ep.title}`;
+    detailSubtitle.textContent = ep.titleCn;
+
+    // Render act tabs
+    const validActs = ep.acts.filter(a => a.lines.length > 0);
+    actTabs.innerHTML = '';
+    if (validActs.length === 0) {
+      actTabs.innerHTML = '<span class="act-tab active" style="cursor:default">暂无台词数据</span>';
+    } else {
+      validActs.forEach((act, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'act-tab' + (i === 0 ? ' active' : '');
+        btn.innerHTML = `${act.label} <span class="tab-lines">${act.lineCount}句</span>`;
+        btn.addEventListener('click', () => switchAct(i));
+        actTabs.appendChild(btn);
+      });
+    }
+
+    switchAct(0);
+    updateCompleteBtn();
+  }
+
+  function switchAct(idx) {
+    if (!currentEpisode) return;
+    const validActs = currentEpisode.acts.filter(a => a.lines.length > 0);
+    if (idx >= validActs.length) idx = 0;
+    currentActIdx = idx;
+    activeLineIdx = -1;
+
+    // Update tabs
+    actTabs.querySelectorAll('.act-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+
+    const act = validActs[idx];
+    if (!act) {
+      audioPlayer.classList.add('no-audio');
+      audioPlayer.querySelector('.player-controls').style.display = 'none';
+      audioPlayer.innerHTML = '<div class="player-controls" style="display:none"></div><div style="padding:8px;color:var(--text-secondary);font-size:14px;text-align:center">暂无本段台词数据</div><audio id="audioEl" preload="metadata"></audio>';
+      scriptList.innerHTML = '<div class="script-empty">暂无台词数据</div>';
+      lineCountEl.textContent = '';
+      return;
+    }
+
+    // Rebuild audio player controls if they were removed
+    if (!audioPlayer.querySelector('.player-controls') || audioPlayer.querySelector('.player-controls').style.display === 'none') {
+      audioPlayer.classList.remove('no-audio');
+      audioPlayer.innerHTML = `
+        <div class="player-controls">
+          <button class="play-btn" id="playBtn" aria-label="播放">
+            <svg id="playIcon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"></polygon></svg>
+          </button>
+          <div class="player-bar-wrap">
+            <div class="player-bar" id="playerBar">
+              <div class="player-bar-fill" id="playerFill"></div>
+            </div>
+            <span class="player-time" id="playerTime">0:00 / 0:00</span>
+          </div>
+          <button class="speed-btn" id="speedBtn" aria-label="播放速度">1.0x</button>
+        </div>
+        <audio id="audioEl" preload="metadata"></audio>
+      `;
+      bindPlayerEvents();
+    }
+
+    stopAudio();
+
+    // Audio
+    const el = document.getElementById('audioEl');
+    if (act.hasAudio && act.audio) {
+      audioPlayer.style.display = '';
+      el.src = act.audio;
+      el.load();
+      document.getElementById('playerFill').style.width = '0%';
+      document.getElementById('playerTime').textContent = '0:00 / 0:00';
+    } else {
+      audioPlayer.style.display = 'none';
+    }
+
+    // Script
+    lineCountEl.textContent = act.lines.length + ' 句';
+    const frag = document.createDocumentFragment();
+    act.lines.forEach((line, i) => {
+      const div = document.createElement('div');
+      div.className = 'script-line';
+      div.dataset.idx = i;
+      div.innerHTML = `
+        <span class="line-time">${fmtTime(line.t)}</span>
+        <span class="line-text">${escHtml(line.en)}</span>
+      `;
+      div.addEventListener('click', () => seekToLine(i));
+      frag.appendChild(div);
+    });
+    scriptList.innerHTML = '';
+    scriptList.appendChild(frag);
+  }
+
+  function escHtml(s) {
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  // ===== AUDIO PLAYER =====
+  function bindPlayerEvents() {
+    const el = document.getElementById('audioEl');
+    const pp = document.getElementById('playBtn');
+    const pi = document.getElementById('playIcon');
+    const pb = document.getElementById('playerBar');
+    const pf = document.getElementById('playerFill');
+    const pt = document.getElementById('playerTime');
+    const sb = document.getElementById('speedBtn');
+
+    if (!pp) return;
+
+    pp.onclick = () => togglePlay();
+
+    el.addEventListener('timeupdate', onTimeUpdate);
+    el.addEventListener('loadedmetadata', () => {
+      pt.textContent = `0:00 / ${fmtTime(el.duration)}`;
+    });
+    el.addEventListener('ended', () => {
+      audioPlaying = false;
+      updatePlayIcon();
+    });
+
+    pb.addEventListener('click', e => {
+      if (!isFinite(el.duration)) return;
+      const rect = pb.getBoundingClientRect();
+      const ratio = (e.clientX - rect.left) / rect.width;
+      el.currentTime = ratio * el.duration;
+    });
+
+    sb.onclick = () => {
+      speedIdx = (speedIdx + 1) % SPEEDS.length;
+      el.playbackRate = SPEEDS[speedIdx];
+      sb.textContent = SPEEDS[speedIdx] + 'x';
+    };
+  }
+
+  function togglePlay() {
+    const el = document.getElementById('audioEl');
+    if (!el || !el.src) return;
+    if (audioPlaying) {
+      el.pause();
+      audioPlaying = false;
+    } else {
+      el.play().catch(() => {});
+      audioPlaying = true;
+    }
+    updatePlayIcon();
+  }
+
+  function stopAudio() {
+    const el = document.getElementById('audioEl');
+    if (el) { el.pause(); el.currentTime = 0; }
+    audioPlaying = false;
+    activeLineIdx = -1;
+    cancelAnimationFrame(animFrame);
+    updatePlayIcon();
+  }
+
+  function updatePlayIcon() {
+    const pi = document.getElementById('playIcon');
+    if (!pi) return;
+    if (audioPlaying) {
+      pi.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+    } else {
+      pi.innerHTML = '<polygon points="5,3 19,12 5,21"></polygon>';
+    }
+  }
+
+  function onTimeUpdate() {
+    const el = document.getElementById('audioEl');
+    const pf = document.getElementById('playerFill');
+    const pt = document.getElementById('playerTime');
+    if (!el || !pf || !pt) return;
+
+    const cur = el.currentTime;
+    const dur = el.duration || 0;
+    pf.style.width = dur ? (cur / dur * 100) + '%' : '0%';
+    pt.textContent = `${fmtTime(cur)} / ${fmtTime(dur)}`;
+
+    // Highlight current line
+    highlightLine(cur);
+  }
+
+  function highlightLine(time) {
+    if (!currentEpisode) return;
+    const validActs = currentEpisode.acts.filter(a => a.lines.length > 0);
+    const act = validActs[currentActIdx];
+    if (!act) return;
+
+    let idx = -1;
+    for (let i = act.lines.length - 1; i >= 0; i--) {
+      if (time >= act.lines[i].t - 0.1) { idx = i; break; }
+    }
+
+    if (idx !== activeLineIdx) {
+      // Remove old highlight
+      const old = scriptList.querySelector('.script-line.active');
+      if (old) old.classList.remove('active');
+
+      activeLineIdx = idx;
+      if (idx >= 0) {
+        const el = scriptList.children[idx];
+        if (el) {
+          el.classList.add('active');
+          // Auto-scroll
+          const container = scriptList;
+          const elTop = el.offsetTop - container.offsetTop;
+          const cTop = container.scrollTop;
+          const cH = container.clientHeight;
+          if (elTop < cTop || elTop > cTop + cH - 60) {
+            container.scrollTo({ top: elTop - cH / 3, behavior: 'smooth' });
+          }
+        }
+      }
+    }
+  }
+
+  function seekToLine(idx) {
+    const el = document.getElementById('audioEl');
+    if (!currentEpisode) return;
+    const validActs = currentEpisode.acts.filter(a => a.lines.length > 0);
+    const act = validActs[currentActIdx];
+    if (!act || !act.lines[idx]) return;
+
+    el.currentTime = act.lines[idx].t;
+    if (!audioPlaying) { togglePlay(); }
+  }
+
+  // ===== COMPLETE =====
+  function updateCompleteBtn() {
+    if (!currentEpisode) return;
+    const c = isCompleted(currentEpisode.id);
+    completeBtn.textContent = c ? '取消完成标记' : '标记为已完成';
+    completeBtn.classList.toggle('completed', c);
+    completeStatus.textContent = c ? '你已完成本集学习' : '';
+  }
+
+  // ===== SEARCH =====
+  let searchTimer = null;
+  function onSearch(q) {
+    searchQuery = q;
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      renderGrid();
+    }, 200);
+  }
+
+  // ===== EVENT BINDING =====
+  function init() {
+    bindPlayerEvents();
+
+    // Nav
+    navLinks.forEach(l => l.addEventListener('click', e => {
+      e.preventDefault();
+      setView(l.dataset.view);
+    }));
+    mobileLinks.forEach(l => l.addEventListener('click', e => {
+      e.preventDefault();
+      setView(l.dataset.view);
+      mobileNav.classList.remove('open');
+      hamburgerBtn.classList.remove('open');
+      hamburgerBtn.setAttribute('aria-expanded', 'false');
+    }));
+
+    logoBtn.addEventListener('click', () => setView('home'));
+    logoBtn.addEventListener('keydown', e => { if (e.key === 'Enter') setView('home'); });
+
+    startBtn.addEventListener('click', () => {
+      setView('all');
+    });
+
+    backBtn.addEventListener('click', () => {
+      setView('all');
+    });
+
+    // Hamburger
+    hamburgerBtn.addEventListener('click', () => {
+      const open = mobileNav.classList.toggle('open');
+      hamburgerBtn.classList.toggle('open', open);
+      hamburgerBtn.setAttribute('aria-expanded', open);
+    });
+
+    // Search
+    searchInput.addEventListener('input', e => {
+      onSearch(e.target.value);
+      mobileSearchInput.value = e.target.value;
+    });
+    mobileSearchInput.addEventListener('input', e => {
+      onSearch(e.target.value);
+      searchInput.value = e.target.value;
+    });
+
+    // Complete
+    completeBtn.addEventListener('click', () => {
+      if (!currentEpisode) return;
+      toggleComplete(currentEpisode.id);
+      updateCompleteBtn();
+      updateProgress();
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', e => {
+      if (currentView === 'detail' && document.activeElement.tagName !== 'INPUT') {
+        if (e.key === ' ' && document.activeElement === document.body) {
+          e.preventDefault();
+          togglePlay();
+        }
+        if (e.key === 'Escape') {
+          setView('all');
+        }
+      }
+    });
+
+    loadData();
+  }
+
+  // Boot
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
