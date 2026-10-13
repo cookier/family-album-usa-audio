@@ -600,28 +600,30 @@ a:hover { text-decoration: underline; }
   line-height: 1.5;
 }
 .line-text-cn {
-  display: none;
+  display: block;
   color: var(--text-secondary);
   font-size: 13px;
   margin-top: 2px;
 }
-body[data-mode="zh"] .line-text-en { display: none; }
-body[data-mode="zh"] .line-text-cn { display: block; }
-body[data-mode="bi"] .line-text-cn { display: block; }
-.mode-btn {
+body.no-cn .line-text-cn { display: none; }
+.cn-toggle {
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--text-secondary);
   border-radius: 6px;
-  padding: 5px 10px;
-  font-size: 13px;
-  line-height: 1.2;
+  padding: 2px 8px;
+  font-size: 12px;
+  line-height: 1.4;
   cursor: pointer;
   white-space: nowrap;
   font-family: inherit;
-  flex-shrink: 0;
 }
-.mode-btn:hover { border-color: var(--accent); color: var(--accent); }
+.cn-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.script-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 .script-empty {
   text-align: center;
   padding: 40px 20px;
@@ -793,7 +795,6 @@ body[data-mode="bi"] .line-text-cn { display: block; }
     <div class="header-search">
       <input type="text" id="searchInput" placeholder="搜索课程..." aria-label="搜索课程">
     </div>
-    <button class="mode-btn" id="modeBtn" aria-label="切换台词显示模式" title="切换台词显示模式（英文 / 中文 / 中英对照）">EN</button>
     <button class="hamburger" id="hamburgerBtn" aria-label="菜单" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
@@ -883,7 +884,10 @@ body[data-mode="bi"] .line-text-cn { display: block; }
   <div class="script-panel">
     <div class="script-header">
       <span>台词</span>
-      <span id="lineCount"></span>
+      <span class="script-header-right">
+        <button class="cn-toggle" id="cnToggleBtn" aria-label="显示或隐藏中文译文">隐藏译文</button>
+        <span id="lineCount"></span>
+      </span>
     </div>
     <div class="script-list" id="scriptList"></div>
   </div>
@@ -959,25 +963,24 @@ body[data-mode="bi"] .line-text-cn { display: block; }
     return Object.keys(loadProgress().completed).length;
   }
 
-  // ===== DISPLAY MODE (en / zh / bi) =====
-  const MODE_KEY = 'family_album_mode';
-  const MODE_BTN_LABELS = { en: 'EN', bi: '中英', zh: '中' };
-  let displayMode = 'en';
-  function initDisplayMode() {
+  // ===== TRANSLATION VISIBILITY =====
+  const CN_KEY = 'family_album_cn_visible';
+  let cnVisible = true;
+  function initCnVisible() {
     let saved = null;
-    try { saved = localStorage.getItem(MODE_KEY); } catch(e) {}
-    displayMode = MODE_BTN_LABELS[saved] ? saved : 'en';
-    applyDisplayMode();
+    try { saved = localStorage.getItem(CN_KEY); } catch(e) {}
+    cnVisible = saved !== '0';
+    applyCnVisible();
   }
-  function applyDisplayMode() {
-    document.body.dataset.mode = displayMode;
-    const btn = document.getElementById('modeBtn');
-    if (btn) btn.textContent = MODE_BTN_LABELS[displayMode];
+  function applyCnVisible() {
+    document.body.classList.toggle('no-cn', !cnVisible);
+    const btn = document.getElementById('cnToggleBtn');
+    if (btn) btn.textContent = cnVisible ? '隐藏译文' : '显示译文';
   }
-  function cycleDisplayMode() {
-    displayMode = displayMode === 'en' ? 'bi' : displayMode === 'bi' ? 'zh' : 'en';
-    try { localStorage.setItem(MODE_KEY, displayMode); } catch(e) {}
-    applyDisplayMode();
+  function toggleCn() {
+    cnVisible = !cnVisible;
+    try { localStorage.setItem(CN_KEY, cnVisible ? '1' : '0'); } catch(e) {}
+    applyCnVisible();
   }
 
   // ===== DOM REFS =====
@@ -1374,10 +1377,10 @@ body[data-mode="bi"] .line-text-cn { display: block; }
 
   // ===== EVENT BINDING =====
   function init() {
-    initDisplayMode();
+    initCnVisible();
     bindPlayerEvents();
-    const modeBtn = document.getElementById('modeBtn');
-    if (modeBtn) modeBtn.addEventListener('click', cycleDisplayMode);
+    const cnToggleBtn = document.getElementById('cnToggleBtn');
+    if (cnToggleBtn) cnToggleBtn.addEventListener('click', toggleCn);
 
     // Nav
     navLinks.forEach(l => l.addEventListener('click', e => {
