@@ -599,6 +599,29 @@ a:hover { text-decoration: underline; }
   color: var(--text);
   line-height: 1.5;
 }
+.line-text-cn {
+  display: none;
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin-top: 2px;
+}
+body[data-mode="zh"] .line-text-en { display: none; }
+body[data-mode="zh"] .line-text-cn { display: block; }
+body[data-mode="bi"] .line-text-cn { display: block; }
+.mode-btn {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-secondary);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 13px;
+  line-height: 1.2;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+.mode-btn:hover { border-color: var(--accent); color: var(--accent); }
 .script-empty {
   text-align: center;
   padding: 40px 20px;
@@ -770,6 +793,7 @@ a:hover { text-decoration: underline; }
     <div class="header-search">
       <input type="text" id="searchInput" placeholder="搜索课程..." aria-label="搜索课程">
     </div>
+    <button class="mode-btn" id="modeBtn" aria-label="切换台词显示模式" title="切换台词显示模式（英文 / 中文 / 中英对照）">EN</button>
     <button class="hamburger" id="hamburgerBtn" aria-label="菜单" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
@@ -933,6 +957,27 @@ a:hover { text-decoration: underline; }
   }
   function completedCount() {
     return Object.keys(loadProgress().completed).length;
+  }
+
+  // ===== DISPLAY MODE (en / zh / bi) =====
+  const MODE_KEY = 'family_album_mode';
+  const MODE_BTN_LABELS = { en: 'EN', bi: '中英', zh: '中' };
+  let displayMode = 'en';
+  function initDisplayMode() {
+    let saved = null;
+    try { saved = localStorage.getItem(MODE_KEY); } catch(e) {}
+    displayMode = MODE_BTN_LABELS[saved] ? saved : 'en';
+    applyDisplayMode();
+  }
+  function applyDisplayMode() {
+    document.body.dataset.mode = displayMode;
+    const btn = document.getElementById('modeBtn');
+    if (btn) btn.textContent = MODE_BTN_LABELS[displayMode];
+  }
+  function cycleDisplayMode() {
+    displayMode = displayMode === 'en' ? 'bi' : displayMode === 'bi' ? 'zh' : 'en';
+    try { localStorage.setItem(MODE_KEY, displayMode); } catch(e) {}
+    applyDisplayMode();
   }
 
   // ===== DOM REFS =====
@@ -1161,7 +1206,10 @@ a:hover { text-decoration: underline; }
       div.dataset.idx = i;
       div.innerHTML = `
         <span class="line-time">${fmtTime(line.t)}</span>
-        <span class="line-text">${escHtml(line.en)}</span>
+        <span class="line-text">
+          <span class="line-text-en">${escHtml(line.en)}</span>
+          ${line.cn ? `<span class="line-text-cn">${escHtml(line.cn)}</span>` : ''}
+        </span>
       `;
       div.addEventListener('click', () => seekToLine(i));
       frag.appendChild(div);
@@ -1326,7 +1374,10 @@ a:hover { text-decoration: underline; }
 
   // ===== EVENT BINDING =====
   function init() {
+    initDisplayMode();
     bindPlayerEvents();
+    const modeBtn = document.getElementById('modeBtn');
+    if (modeBtn) modeBtn.addEventListener('click', cycleDisplayMode);
 
     // Nav
     navLinks.forEach(l => l.addEventListener('click', e => {

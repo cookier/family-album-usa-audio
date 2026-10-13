@@ -2,7 +2,7 @@
 
 经典英语情景教学网站，跟着 Stewart 一家学地道美式英语。
 
-**🔗 在线访问：https://family.caiden.asia**
+**🔗 在线访问：https://cookier.github.io/family-album-usa-audio/**
 
 ## 简介
 
@@ -12,6 +12,7 @@
 
 - 📖 26集完整剧本，带时间戳同步
 - 🎧 音频播放，支持倍速调节（0.5x ~ 2.0x）
+- 🈶 三态台词显示：仅英文 / 中英对照 / 仅中文（顶部按钮切换，自动记住）
 - 🔍 课程搜索
 - ✅ 学习进度追踪（本地存储）
 - ⌨️ 键盘快捷键（空格播放/暂停，Esc返回）
@@ -33,7 +34,7 @@
 
 ```bash
 # 克隆仓库
-git clone https://github.com/hczs/family-album-usa.git
+git clone https://github.com/cookier/family-album-usa-audio.git
 
 # 直接打开
 open index.html
@@ -58,7 +59,7 @@ family-album-usa/
 
 ## 数据说明
 
-- **episodes.json**：包含26集完整剧本数据，每行带有时间戳（`t` 字段，单位秒），可与音频同步
+- **episodes.json**：包含26集完整剧本数据，每行带有时间戳（`t` 字段，单位秒），可与音频同步；每句带中文翻译（`cn` 字段，99.9% 覆盖：第1-17集来自 Family-Album 项目，第18-26集由 data.js 译文对齐生成）
 - **audio/**：MP3 音频文件，命名规则为 `u{集数:02d}{幕数:02d}.mp3`
 - 当前第1-17集有完整音频，第18-19集仅有剧本，第20-26集数据待补充
 
