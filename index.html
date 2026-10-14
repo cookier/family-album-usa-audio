@@ -1249,6 +1249,13 @@ body.no-cn .line-text-cn { display: none; }
       audioPlaying = false;
       updatePlayIcon();
     });
+    el.addEventListener('error', () => {
+      // 媒体加载/解码失败: 给出可见提示而不是无声卡住
+      audioPlaying = false;
+      updatePlayIcon();
+      pt.textContent = '音频加载失败，请刷新页面重试';
+      console.error('音频加载失败:', el.currentSrc || el.src, el.error);
+    });
 
     pb.addEventListener('click', e => {
       if (!isFinite(el.duration)) return;
@@ -1283,7 +1290,16 @@ body.no-cn .line-text-cn { display: none; }
       // 跳过片头：仍处于片头区间、或播完后重放时，从第一句台词前 1 秒开始播
       const intro = introStartTime();
       if (el.currentTime < intro || el.ended) el.currentTime = intro;
-      el.play().catch(() => {});
+      const p = el.play();
+      if (p && typeof p.then === "function") {
+        // 播放失败(如媒体加载出错)时如实回退状态，避免假"播放中"
+        p.then(() => { audioPlaying = true; updatePlayIcon(); })
+         .catch(err => { audioPlaying = false; updatePlayIcon();
+           const pt = document.getElementById("playerTime");
+           if (pt) pt.textContent = "播放失败，请刷新重试";
+           console.error("播放失败:", err); });
+        return;
+      }
       audioPlaying = true;
     }
     updatePlayIcon();
