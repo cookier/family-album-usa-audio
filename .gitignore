@@ -11,14 +11,4 @@ Thumbs.db
 # Temp
 *.tmp
 *.bak
-
-# 本地候选音频/临时文件（未接入，不入库）
-_new_audio/
-_ep1a3.mp4
-_*.py
-_*.sh
-_*.json
-_*.txt
-_segs/
-_aligned/
-_whisper_model/
+_*
