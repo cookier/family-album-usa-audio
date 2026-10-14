@@ -11700,16 +11700,8 @@
           "label": "Act I",
           "audio": "audio/u1101.mp3",
           "hasAudio": true,
-          "lineCount": 58,
+          "lineCount": 56,
           "lines": [
-            {
-              "t": 2.44,
-              "en": "A Place of Our Own"
-            },
-            {
-              "t": 4.9,
-              "en": "ACT I"
-            },
             {
               "t": 11.66,
               "en": "Ellen, I'd like your opinion.",
@@ -11997,16 +11989,8 @@
           "label": "Act II",
           "audio": "audio/u1102.mp3",
           "hasAudio": true,
-          "lineCount": 97,
+          "lineCount": 95,
           "lines": [
-            {
-              "t": 0.35,
-              "en": "A Place of Our Own"
-            },
-            {
-              "t": 4.43,
-              "en": "ACT II"
-            },
             {
               "t": 18.48,
               "en": "I remember your parents' first house very well.",
@@ -12489,16 +12473,8 @@
           "label": "Act III",
           "audio": "audio/u1103.mp3",
           "hasAudio": true,
-          "lineCount": 88,
+          "lineCount": 86,
           "lines": [
-            {
-              "t": 1.26,
-              "en": "A Place of Our Own"
-            },
-            {
-              "t": 5.97,
-              "en": "ACT III"
-            },
             {
               "t": 8.01,
               "en": "How do you do?",
@@ -12932,7 +12908,7 @@
           ]
         }
       ],
-      "totalLines": 243,
+      "totalLines": 237,
       "hasAudio": true
     },
     {
@@ -12945,16 +12921,8 @@
           "label": "Act I",
           "audio": "audio/u1201.mp3",
           "hasAudio": true,
-          "lineCount": 46,
+          "lineCount": 44,
           "lines": [
-            {
-              "t": 8.06,
-              "en": "You're Tops"
-            },
-            {
-              "t": 17.04,
-              "en": "ACT I"
-            },
             {
               "t": 67.86,
               "en": "Is that you, Susan?",
@@ -14011,7 +13979,7 @@
           ]
         }
       ],
-      "totalLines": 209,
+      "totalLines": 207,
       "hasAudio": true
     },
     {
@@ -14024,16 +13992,8 @@
           "label": "Act I",
           "audio": "audio/u1301.mp3",
           "hasAudio": true,
-          "lineCount": 92,
+          "lineCount": 90,
           "lines": [
-            {
-              "t": 1.82,
-              "en": "A Real Stewart"
-            },
-            {
-              "t": 3.45,
-              "en": "ACT I"
-            },
             {
               "t": 23.36,
               "en": "There's nothing more joyous than the arrival of a new baby.",
@@ -14491,16 +14451,8 @@
           "label": "Act II",
           "audio": "audio/u1302.mp3",
           "hasAudio": true,
-          "lineCount": 44,
+          "lineCount": 42,
           "lines": [
-            {
-              "t": 1.87,
-              "en": "A Real Stewart"
-            },
-            {
-              "t": 8.58,
-              "en": "ACT II"
-            },
             {
               "t": 28.51,
               "en": "It's almost ten o'clock.",
@@ -14717,16 +14669,8 @@
           "label": "Act III",
           "audio": "audio/u1303.mp3",
           "hasAudio": true,
-          "lineCount": 73,
+          "lineCount": 71,
           "lines": [
-            {
-              "t": 0.29,
-              "en": "A Real Stewart"
-            },
-            {
-              "t": 4.17,
-              "en": "ACT III"
-            },
             {
               "t": 7.61,
               "en": "Thanks, Michelle.",
@@ -15085,7 +15029,7 @@
           ]
         }
       ],
-      "totalLines": 209,
+      "totalLines": 203,
       "hasAudio": true
     },
     {
@@ -15492,16 +15436,8 @@
           "label": "Act II",
           "audio": "audio/u1402.mp3",
           "hasAudio": true,
-          "lineCount": 104,
+          "lineCount": 102,
           "lines": [
-            {
-              "t": 0.5,
-              "en": "Playing Games"
-            },
-            {
-              "t": 2.25,
-              "en": "ACT II"
-            },
             {
               "t": 4.97,
               "en": "Oh, Daddy!",
@@ -16294,7 +16230,7 @@
           ]
         }
       ],
-      "totalLines": 235,
+      "totalLines": 233,
       "hasAudio": true
     },
     {
@@ -17268,16 +17204,8 @@
           "label": "Act I",
           "audio": "audio/u1601.mp3",
           "hasAudio": true,
-          "lineCount": 70,
+          "lineCount": 68,
           "lines": [
-            {
-              "t": 0.23,
-              "en": "Full of Surprises"
-            },
-            {
-              "t": 4.56,
-              "en": "ACT I"
-            },
             {
               "t": 14.67,
               "en": "The mailman just dropped some mail in our box, Grandpa.",
@@ -17625,16 +17553,8 @@
           "label": "Act II",
           "audio": "audio/u1602.mp3",
           "hasAudio": true,
-          "lineCount": 56,
+          "lineCount": 54,
           "lines": [
-            {
-              "t": 0.72,
-              "en": "Full of Surprises"
-            },
-            {
-              "t": 3.47,
-              "en": "ACT II"
-            },
             {
               "t": 22.91,
               "en": "Hello. What can I do for you?",
@@ -17912,16 +17832,8 @@
           "label": "Act III",
           "audio": "audio/u1603.mp3",
           "hasAudio": true,
-          "lineCount": 89,
+          "lineCount": 87,
           "lines": [
-            {
-              "t": 0.72,
-              "en": "Full of Surprises"
-            },
-            {
-              "t": 5.93,
-              "en": "ACT III"
-            },
             {
               "t": 53.86,
               "en": "Don't tell me.",
@@ -18360,7 +18272,7 @@
           ]
         }
       ],
-      "totalLines": 215,
+      "totalLines": 209,
       "hasAudio": true
     },
     {
