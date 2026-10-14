@@ -19,3 +19,6 @@ _*.py
 _*.sh
 _*.json
 _*.txt
+_segs/
+_aligned/
+_whisper_model/
