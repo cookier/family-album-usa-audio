@@ -16980,12 +16980,8 @@
           "label": "Act III",
           "audio": "audio/u1503.mp3",
           "hasAudio": true,
-          "lineCount": 55,
+          "lineCount": 54,
           "lines": [
-            {
-              "t": 1.84,
-              "en": "15-3   ACT III"
-            },
             {
               "t": 7.87,
               "en": "Welcome to the Watermill Inn.",
@@ -17259,7 +17255,7 @@
           ]
         }
       ],
-      "totalLines": 186,
+      "totalLines": 185,
       "hasAudio": true
     },
     {
@@ -18377,12 +18373,8 @@
           "label": "Act I",
           "audio": "audio/u1701.mp3",
           "hasAudio": true,
-          "lineCount": 53,
+          "lineCount": 52,
           "lines": [
-            {
-              "t": 0.85,
-              "en": "17  Photo Finish ACT II"
-            },
             {
               "t": 8.24,
               "en": "What are you doing?",
@@ -18650,12 +18642,8 @@
           "label": "Act II",
           "audio": "audio/u1702.mp3",
           "hasAudio": true,
-          "lineCount": 59,
+          "lineCount": 58,
           "lines": [
-            {
-              "t": 0.01,
-              "en": "17 Photo Finish ACT II"
-            },
             {
               "t": 9.92,
               "en": "Good morning.",
@@ -18953,12 +18941,8 @@
           "label": "Act III",
           "audio": "audio/u1703.mp3",
           "hasAudio": true,
-          "lineCount": 42,
+          "lineCount": 41,
           "lines": [
-            {
-              "t": 0.01,
-              "en": "17 Photo Finish ACT III"
-            },
             {
               "t": 134.0,
               "en": "Two weeks. I said I could do it in two weeks, and I did it.",
@@ -19167,7 +19151,7 @@
           ]
         }
       ],
-      "totalLines": 154,
+      "totalLines": 151,
       "hasAudio": true
     },
     {
@@ -19180,12 +19164,8 @@
           "label": "Act I",
           "audio": "audio/u1801.mp3",
           "hasAudio": true,
-          "lineCount": 93,
+          "lineCount": 92,
           "lines": [
-            {
-              "t": 0.0,
-              "en": "18-1  Making a Difference  ACT I"
-            },
             {
               "t": 0.0,
               "en": "I don't believe it!",
@@ -20087,7 +20067,7 @@
           ]
         }
       ],
-      "totalLines": 177,
+      "totalLines": 176,
       "hasAudio": false
     },
     {
