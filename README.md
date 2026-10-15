@@ -24,7 +24,7 @@
 **零依赖，零构建，纯原生实现：**
 
 - HTML + CSS + JavaScript（单文件，38KB）
-- 数据存储：JSON（episodes.json，207KB）
+- 数据存储：JSON（episodes.json，约 950KB）
 - 音频：MP3 格式
 - 进度存储：localStorage
 - 部署：任意静态服务器（nginx / Vercel / GitHub Pages）
@@ -62,7 +62,9 @@ family-album-usa/
 
 - **episodes.json**：包含26集完整剧本数据，每行带有时间戳（`t` 字段，单位秒），可与音频同步；每句带中文翻译（`cn` 字段，99.2% 覆盖，译文取自 family-album-usa/data.js 的人工校对版本，经句级文本对齐映射；被音频时间轴拆散的句子已并回源数据的自然句，总行数 6335 → 5602）
 - **audio/**：MP3 音频文件，命名规则为 `u{集数:02d}{幕数:02d}.mp3`
-- 当前第1-17集有完整音频，第18-19集仅有剧本，第20-26集数据待补充
+- **时间戳校准**：78 幕全部有音频，时间轴来自两条实测链路——
+  - ep1-17 的 49 幕：以 LRC 歌词时间轴为基准，按音频互相关实测偏移（+0.10~0.12s）重校；
+  - 其余 29 幕（ep1a3、ep12a2、ep18-26）：faster-whisper 转写对齐，并经 LRC 交叉验证、语音起点检测修正了个别错位句。
 
 ## 浏览器兼容
 
@@ -80,6 +82,7 @@ MIT License
 - 剧本数据来源：[littleflute/Family-Album-USA](https://github.com/littleflute/Family-Album-USA)
 - 音频来源：[Archive.org](https://archive.org)
 - 剧本补充：[LovelyLanguage.ru](https://www.lovelylanguage.ru)
+- 音频补充：[Bilibili - 走遍美国](https://www.bilibili.com/video/BV1534y1t7AR)
 
 ## 免责声明
 
