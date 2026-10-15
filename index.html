@@ -1505,14 +1505,16 @@ body.no-cn .line-text-cn { display: none; }
   }
 
   function lineEndIdx(act, i) {
-    // 句尾：非末句=下一句开始前 0.15s；末句=估算时长+1s（避免复读进片尾长音）
+    // 复读终点 = "只听有效内容": 下一句开始前 0.15s 与 估算朗读时长+2.5s 取小者,
+    // 大间隔(过场音乐/拨号音)不会卷进复读; 末句封顶音频长度
     const t0 = act.lines[i].t;
-    if (i + 1 < act.lines.length) {
-      return Math.max(t0 + 0.4, act.lines[i + 1].t - 0.15);
-    }
     const el = document.getElementById('audioEl');
     const dur = (el && isFinite(el.duration)) ? el.duration : Infinity;
-    return Math.min(t0 + lineSpeechDur(act.lines[i]) + 1, dur - 0.2);
+    const est = t0 + lineSpeechDur(act.lines[i]) + 2.5;
+    if (i + 1 < act.lines.length) {
+      return Math.max(t0 + 0.4, Math.min(act.lines[i + 1].t - 0.15, est));
+    }
+    return Math.max(t0 + 0.4, Math.min(est, dur - 0.2));
   }
 
   function updateRepeatUI() {
