@@ -545,6 +545,75 @@ a:hover { text-decoration: underline; }
   border-color: var(--border-strong);
 }
 
+/* Player toggle buttons (loop / gap cap) */
+.ctrl-btn {
+  width: 30px; height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+  color: var(--text-secondary);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.ctrl-btn svg { width: 14px; height: 14px; }
+.ctrl-btn:hover { color: var(--text); border-color: var(--border-strong); }
+.ctrl-btn.on {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--highlight-bg);
+}
+
+/* Line repeat button */
+.line-repeat {
+  margin-left: auto;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 1px;
+  width: 24px; height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  position: relative;
+  font-family: inherit;
+  transition: opacity 0.15s, color 0.15s, background 0.15s;
+}
+.line-repeat svg { width: 13px; height: 13px; }
+.script-line:hover .line-repeat,
+.script-line.active .line-repeat { opacity: 0.65; }
+.line-repeat:hover {
+  opacity: 1;
+  color: var(--accent);
+  background: var(--highlight-bg);
+}
+.line-repeat.repeating { opacity: 1; color: var(--accent); }
+.rep-badge {
+  position: absolute;
+  top: -6px; right: -6px;
+  min-width: 14px; height: 14px;
+  padding: 0 3px;
+  border-radius: 7px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 14px;
+  text-align: center;
+  display: none;
+}
+.line-repeat.repeating .rep-badge { display: block; }
+
 /* Script Panel */
 .script-panel {
   border: 1px solid var(--border);
@@ -733,6 +802,7 @@ body.no-cn .line-text-cn { display: none; }
   .hero { padding: 48px 24px 48px; }
   .hero-stats { gap: 24px; }
   .hero-stat .num { font-size: 24px; }
+  .line-repeat { opacity: 0.45; }
 }
 @media (max-width: 480px) {
   .episode-grid { grid-template-columns: 1fr; }
@@ -877,7 +947,13 @@ body.no-cn .line-text-cn { display: none; }
         </div>
         <span class="player-time" id="playerTime">0:00 / 0:00</span>
       </div>
+      <button class="ctrl-btn" id="gapBtn" aria-label="句间停顿不超过3秒" title="句间停顿不超过 3 秒">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2.5 2.5"></path><path d="M9 2h6"></path></svg>
+      </button>
       <button class="speed-btn" id="speedBtn" aria-label="播放速度">1.0x</button>
+      <button class="ctrl-btn" id="loopBtn" aria-label="本幕单曲循环" title="本幕单曲循环">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"></path><path d="M3 11v-1a4 4 0 0 1 4-4h14"></path><path d="M7 22l-4-4 4-4"></path><path d="M21 13v1a4 4 0 0 1-4 4H3"></path></svg>
+      </button>
     </div>
     <audio id="audioEl" preload="metadata"></audio>
   </div>
@@ -940,6 +1016,13 @@ body.no-cn .line-text-cn { display: none; }
   const SPEEDS = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
   let speedIdx = 2; // 1.0x
 
+  // ===== PLAYBACK TOGGLES / REPEAT =====
+  const LOOP_KEY = 'family_album_loop';
+  const GAP_KEY = 'family_album_gap';
+  let actLoop = false;       // 本幕单曲循环
+  let gapCap = true;         // 相邻句停顿不超过 3 秒
+  let repeat = { active: false, lineIdx: -1, round: 0, total: 3 }; // 句子复读
+
   // ===== PROGRESS (localStorage) =====
   const STORAGE_KEY = 'family_album_progress';
   function loadProgress() {
@@ -983,6 +1066,21 @@ body.no-cn .line-text-cn { display: none; }
     applyCnVisible();
   }
 
+  // ===== PLAYBACK TOGGLES (loop / gap cap) =====
+  function initPlaybackToggles() {
+    let l = null, g = null;
+    try { l = localStorage.getItem(LOOP_KEY); g = localStorage.getItem(GAP_KEY); } catch(e) {}
+    actLoop = l === '1';
+    gapCap = g !== '0';
+    applyPlaybackToggles();
+  }
+  function applyPlaybackToggles() {
+    const lb = document.getElementById('loopBtn');
+    if (lb) lb.classList.toggle('on', actLoop);
+    const gb = document.getElementById('gapBtn');
+    if (gb) gb.classList.toggle('on', gapCap);
+  }
+
   // ===== DOM REFS =====
   const $ = id => document.getElementById(id);
   const logoBtn = $('logoBtn');
@@ -1020,6 +1118,9 @@ body.no-cn .line-text-cn { display: none; }
 
   const navLinks = document.querySelectorAll('.nav-link');
   const mobileLinks = document.querySelectorAll('.mobile-link');
+
+  // 播放栏唯一模板源：加载时捕获静态标记，重建时复用（避免两处模板漂移）
+  const PLAYER_HTML = document.getElementById('audioPlayer').innerHTML;
 
   // ===== FORMAT TIME =====
   function fmtTime(s) {
@@ -1168,21 +1269,7 @@ body.no-cn .line-text-cn { display: none; }
     // Rebuild audio player controls if they were removed
     if (!audioPlayer.querySelector('.player-controls') || audioPlayer.querySelector('.player-controls').style.display === 'none') {
       audioPlayer.classList.remove('no-audio');
-      audioPlayer.innerHTML = `
-        <div class="player-controls">
-          <button class="play-btn" id="playBtn" aria-label="播放">
-            <svg id="playIcon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"></polygon></svg>
-          </button>
-          <div class="player-bar-wrap">
-            <div class="player-bar" id="playerBar">
-              <div class="player-bar-fill" id="playerFill"></div>
-            </div>
-            <span class="player-time" id="playerTime">0:00 / 0:00</span>
-          </div>
-          <button class="speed-btn" id="speedBtn" aria-label="播放速度">1.0x</button>
-        </div>
-        <audio id="audioEl" preload="metadata"></audio>
-      `;
+      audioPlayer.innerHTML = PLAYER_HTML;
       bindPlayerEvents();
     }
 
@@ -1213,8 +1300,17 @@ body.no-cn .line-text-cn { display: none; }
           <span class="line-text-en">${escHtml(line.en)}</span>
           ${line.cn ? `<span class="line-text-cn">${escHtml(line.cn)}</span>` : ''}
         </span>
+        <button class="line-repeat" data-idx="${i}" aria-label="复读本句 3 遍" title="复读 3 遍">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"></path><path d="M3 11v-1a4 4 0 0 1 4-4h14"></path><path d="M7 22l-4-4 4-4"></path><path d="M21 13v1a4 4 0 0 1-4 4H3"></path></svg>
+          <span class="rep-badge"></span>
+        </button>
       `;
       div.addEventListener('click', () => seekToLine(i));
+      div.querySelector('.line-repeat').addEventListener('click', e => {
+        e.stopPropagation();
+        if (repeat.active && repeat.lineIdx === i) { cancelRepeat(true); return; }
+        startRepeat(i);
+      });
       frag.appendChild(div);
     });
     scriptList.innerHTML = '';
@@ -1246,7 +1342,20 @@ body.no-cn .line-text-cn { display: none; }
       pt.textContent = `0:00 / ${fmtTime(el.duration)}`;
     });
     el.addEventListener('ended', () => {
-      audioPlaying = false;
+      resetRepeat();
+      if (actLoop && el.src) {
+        // 单曲循环：回到本幕开头（沿用跳过片头的起点）
+        el.currentTime = introStartTime();
+        const p = el.play();
+        if (p && typeof p.then === 'function') {
+          p.then(() => { audioPlaying = true; updatePlayIcon(); })
+           .catch(() => { audioPlaying = false; updatePlayIcon(); });
+          return;
+        }
+        audioPlaying = true;
+      } else {
+        audioPlaying = false;
+      }
       updatePlayIcon();
     });
     el.addEventListener('error', () => {
@@ -1259,6 +1368,7 @@ body.no-cn .line-text-cn { display: none; }
 
     pb.addEventListener('click', e => {
       if (!isFinite(el.duration)) return;
+      cancelRepeat(false); // 拖动进度条：退出复读，转正常播放
       const rect = pb.getBoundingClientRect();
       const ratio = (e.clientX - rect.left) / rect.width;
       el.currentTime = ratio * el.duration;
@@ -1269,6 +1379,20 @@ body.no-cn .line-text-cn { display: none; }
       el.playbackRate = SPEEDS[speedIdx];
       sb.textContent = SPEEDS[speedIdx] + 'x';
     };
+
+    const lb = document.getElementById('loopBtn');
+    if (lb) lb.onclick = () => {
+      actLoop = !actLoop;
+      try { localStorage.setItem(LOOP_KEY, actLoop ? '1' : '0'); } catch(e) {}
+      applyPlaybackToggles();
+    };
+    const gb = document.getElementById('gapBtn');
+    if (gb) gb.onclick = () => {
+      gapCap = !gapCap;
+      try { localStorage.setItem(GAP_KEY, gapCap ? '1' : '0'); } catch(e) {}
+      applyPlaybackToggles();
+    };
+    applyPlaybackToggles();
   }
 
   function introStartTime() {
@@ -1310,6 +1434,7 @@ body.no-cn .line-text-cn { display: none; }
     if (el) { el.pause(); el.currentTime = 0; }
     audioPlaying = false;
     activeLineIdx = -1;
+    resetRepeat();
     cancelAnimationFrame(animFrame);
     updatePlayIcon();
   }
@@ -1333,10 +1458,120 @@ body.no-cn .line-text-cn { display: none; }
     const cur = el.currentTime;
     const dur = el.duration || 0;
     pf.style.width = dur ? (cur / dur * 100) + '%' : '0%';
-    pt.textContent = `${fmtTime(cur)} / ${fmtTime(dur)}`;
+    const prefix = repeat.active ? `复读 ${repeat.round}/${repeat.total} · ` : '';
+    pt.textContent = `${prefix}${fmtTime(cur)} / ${fmtTime(dur)}`;
 
     // Highlight current line
     highlightLine(cur);
+
+    if (repeat.active) {
+      // 句子复读：到句尾则循环下一遍，满 3 遍暂停
+      const act = currentAct();
+      if (act && audioPlaying && cur >= lineEndIdx(act, repeat.lineIdx)) {
+        if (repeat.round < repeat.total) {
+          repeat.round++;
+          el.currentTime = act.lines[repeat.lineIdx].t;
+          updateRepeatUI();
+        } else {
+          cancelRepeat(true);
+        }
+      }
+      return;
+    }
+
+    // 句间隔封顶：语音结束后到下一句超过 3 秒的部分自动跳过
+    if (gapCap && audioPlaying) gapSkipCheck(cur);
+  }
+
+  function currentAct() {
+    if (!currentEpisode) return null;
+    const validActs = currentEpisode.acts.filter(a => a.lines.length > 0);
+    return validActs[currentActIdx] || null;
+  }
+
+  function lineEndIdx(act, i) {
+    // 句尾：下一句开始前 0.15s；末句按文本长度估算并封顶（避免复读进片尾长音）
+    const t0 = act.lines[i].t;
+    if (i + 1 < act.lines.length) {
+      return Math.max(t0 + 0.4, act.lines[i + 1].t - 0.15);
+    }
+    const el = document.getElementById('audioEl');
+    const est = Math.max(2, act.lines[i].en.length / 13) + 1;
+    return (el && isFinite(el.duration)) ? Math.min(t0 + est, el.duration - 0.2) : t0 + est;
+  }
+
+  function updateRepeatUI() {
+    scriptList.querySelectorAll('.line-repeat.repeating').forEach(b => {
+      b.classList.remove('repeating');
+      const badge = b.querySelector('.rep-badge');
+      if (badge) badge.textContent = '';
+    });
+    if (repeat.active) {
+      const btn = scriptList.querySelector(`.line-repeat[data-idx="${repeat.lineIdx}"]`);
+      if (btn) {
+        btn.classList.add('repeating');
+        const badge = btn.querySelector('.rep-badge');
+        if (badge) badge.textContent = repeat.round;
+      }
+    }
+  }
+
+  function startRepeat(idx) {
+    const act = currentAct();
+    const el = document.getElementById('audioEl');
+    if (!act || !act.lines[idx] || !(act.hasAudio && act.audio) || !el.src) return;
+    repeat = { active: true, lineIdx: idx, round: 1, total: 3 };
+    el.currentTime = act.lines[idx].t;
+    const p = el.play();
+    if (p && typeof p.then === 'function') {
+      p.then(() => { audioPlaying = true; updatePlayIcon(); })
+       .catch(() => { audioPlaying = false; updatePlayIcon(); resetRepeat(); });
+    } else {
+      audioPlaying = true;
+    }
+    updatePlayIcon();
+    updateRepeatUI();
+  }
+
+  function resetRepeat() {
+    repeat = { active: false, lineIdx: -1, round: 0, total: 3 };
+    updateRepeatUI();
+  }
+
+  function cancelRepeat(pauseAfter) {
+    const wasActive = repeat.active;
+    resetRepeat();
+    if (wasActive) {
+      // 播放栏时间去掉"复读 n/3"前缀
+      const el = document.getElementById('audioEl');
+      const pt = document.getElementById('playerTime');
+      if (pt && el && isFinite(el.duration)) {
+        pt.textContent = `${fmtTime(el.currentTime)} / ${fmtTime(el.duration)}`;
+      }
+    }
+    if (pauseAfter) {
+      const el = document.getElementById('audioEl');
+      if (el) el.pause();
+      audioPlaying = false;
+      updatePlayIcon();
+    }
+  }
+
+  function gapSkipCheck(cur) {
+    const act = currentAct();
+    if (!act) return;
+    const lines = act.lines;
+    const i = activeLineIdx;
+    if (i < 0 || i >= lines.length - 1) return;
+    const next = lines[i + 1].t;
+    if (next - cur <= 3.05) return;
+    // 估算当前句语音结束点（约 13 字符/秒，不越过下一句）
+    const est = Math.max(1.5, lines[i].en.length / 13);
+    const endI = Math.min(lines[i].t + est, next - 0.3);
+    if (cur >= endI + 3) {
+      const el = document.getElementById('audioEl');
+      if (el) el.currentTime = next - 0.25;
+    }
   }
 
   function highlightLine(time) {
@@ -1380,6 +1615,7 @@ body.no-cn .line-text-cn { display: none; }
     const act = validActs[currentActIdx];
     if (!act || !act.lines[idx]) return;
 
+    if (repeat.active && repeat.lineIdx !== idx) cancelRepeat(false);
     el.currentTime = act.lines[idx].t;
     if (!audioPlaying) { togglePlay(); }
   }
@@ -1406,6 +1642,7 @@ body.no-cn .line-text-cn { display: none; }
   // ===== EVENT BINDING =====
   function init() {
     initCnVisible();
+    initPlaybackToggles();
     bindPlayerEvents();
     const cnToggleBtn = document.getElementById('cnToggleBtn');
     if (cnToggleBtn) cnToggleBtn.addEventListener('click', toggleCn);
