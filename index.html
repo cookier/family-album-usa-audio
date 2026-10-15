@@ -1489,14 +1489,19 @@ body.no-cn .line-text-cn { display: none; }
     return validActs[currentActIdx] || null;
   }
 
-  // ===== 句间隔: 实时估算朗读时长(数字逐位读出按 0.45s/个, 其余 13 字符/秒, 底数 1.2s) =====
+  // ===== 句间隔: 词数估算朗读时长(数字逐位读、缩写逐字母读, 语速 2.4 词/秒, 另计句内停顿) =====
   function lineSpeechDur(line) {
-    let digits = 0, letters = 0;
-    for (const c of line.en) {
-      if (c >= '0' && c <= '9') digits++;
-      else if (/[A-Za-z']/.test(c)) letters++;
+    const en = line.en;
+    let words = 0;
+    for (const tok of en.split(/[\s,.;:!?"“”()\[\]-]+/)) {
+      if (!tok) continue;
+      if (/^\d+$/.test(tok)) words += tok.length;
+      else if (tok.length >= 3 && tok === tok.toUpperCase()) words += tok.length * 0.8;
+      else words++;
     }
-    return 1.2 + letters / 13 + digits * 0.45;
+    const pauses = (en.match(/\.\.\./g) || []).length * 1.4 + (en.match(/--/g) || []).length;
+    const sents = (en.match(/[.!?]["“”]?(\s|$)/g) || []).length;
+    return 1.0 + words / 2.4 + pauses + Math.max(0, sents - 1) * 0.9;
   }
 
   function lineEndIdx(act, i) {
@@ -1575,8 +1580,6 @@ body.no-cn .line-text-cn { display: none; }
     if (i < 0 || i >= lines.length - 1) return;
     const next = lines[i + 1].t;
     if (next - cur <= 3.05) return;
-    // 超长合并句(多句并一)朗读跨度不可估, 不启用跳过, 宁可不压缩也不切字
-    if (lines[i].en.length > 90) return;
     // 当前句朗读估算时长 + 3 秒间隔后才跳
     if (cur < lines[i].t + lineSpeechDur(lines[i]) + 3) return;
     const el = document.getElementById('audioEl');
