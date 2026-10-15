@@ -955,7 +955,7 @@ body.no-cn .line-text-cn { display: none; }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"></path><path d="M3 11v-1a4 4 0 0 1 4-4h14"></path><path d="M7 22l-4-4 4-4"></path><path d="M21 13v1a4 4 0 0 1-4 4H3"></path></svg>
       </button>
     </div>
-    <audio id="audioEl" preload="metadata"></audio>
+    <audio id="audioEl" preload="auto"></audio>
   </div>
   <div class="script-panel">
     <div class="script-header">
@@ -1133,7 +1133,7 @@ body.no-cn .line-text-cn { display: none; }
   // ===== FETCH DATA =====
   async function loadData() {
     try {
-      const res = await fetch('episodes.json');
+      const res = await fetch('episodes.json', { cache: 'no-cache' });
       const data = await res.json();
       meta = data.meta;
       episodes = data.episodes;
@@ -1260,7 +1260,7 @@ body.no-cn .line-text-cn { display: none; }
     if (!act) {
       audioPlayer.classList.add('no-audio');
       audioPlayer.querySelector('.player-controls').style.display = 'none';
-      audioPlayer.innerHTML = '<div class="player-controls" style="display:none"></div><div style="padding:8px;color:var(--text-secondary);font-size:14px;text-align:center">暂无本段台词数据</div><audio id="audioEl" preload="metadata"></audio>';
+      audioPlayer.innerHTML = '<div class="player-controls" style="display:none"></div><div style="padding:8px;color:var(--text-secondary);font-size:14px;text-align:center">暂无本段台词数据</div><audio id="audioEl" preload="auto"></audio>';
       scriptList.innerHTML = '<div class="script-empty">暂无台词数据</div>';
       lineCountEl.textContent = '';
       return;
@@ -1489,15 +1489,44 @@ body.no-cn .line-text-cn { display: none; }
     return validActs[currentActIdx] || null;
   }
 
+  // ===== 语音区间表（离线 silero VAD 预生成, episodes.json 每幕 speech 字段） =====
+  // 判断"有没有人在说话"而不是"有没有声音"——音乐/拨号音不算语音, 号码慢读算
+  function actSpeech() {
+    const act = currentAct();
+    return (act && act.speech) || null;
+  }
+  function hasSpeech(a, b) {
+    const iv = actSpeech();
+    if (!iv) return true; // 无数据: 不跳(安全)
+    for (let k = 0; k < iv.length; k++) {
+      if (iv[k][1] > a && iv[k][0] < b) return true;
+    }
+    return false;
+  }
+  function lastSpeechEnd(i, from) {
+    const iv = actSpeech();
+    if (!iv) return null;
+    let end = null;
+    for (let k = 0; k < iv.length; k++) {
+      if (iv[k][1] > from && iv[k][0] < from + 25) {
+        if (end === null || iv[k][1] > end) end = iv[k][1];
+      }
+    }
+    return end;
+  }
+
   function lineEndIdx(act, i) {
-    // 句尾：下一句开始前 0.15s；末句按文本长度估算并封顶（避免复读进片尾长音）
+    // 句尾：非末句=下一句开始前 0.15s；末句=实测语音结束点+0.8s（无数据时退回估算）
     const t0 = act.lines[i].t;
     if (i + 1 < act.lines.length) {
       return Math.max(t0 + 0.4, act.lines[i + 1].t - 0.15);
     }
     const el = document.getElementById('audioEl');
+    const dur = (el && isFinite(el.duration)) ? el.duration : Infinity;
+    const se = lastSpeechEnd(i, t0);
+    if (se) return Math.min(se + 0.8, dur - 0.2);
     const est = Math.max(2, act.lines[i].en.length / 13) + 1;
-    return (el && isFinite(el.duration)) ? Math.min(t0 + est, el.duration - 0.2) : t0 + est;
+    return Math.min(t0 + est, dur - 0.2);
   }
 
   function updateRepeatUI() {
@@ -1565,13 +1594,10 @@ body.no-cn .line-text-cn { display: none; }
     if (i < 0 || i >= lines.length - 1) return;
     const next = lines[i + 1].t;
     if (next - cur <= 3.05) return;
-    // 估算当前句语音结束点（约 13 字符/秒，不越过下一句）
-    const est = Math.max(1.5, lines[i].en.length / 13);
-    const endI = Math.min(lines[i].t + est, next - 0.3);
-    if (cur >= endI + 3) {
-      const el = document.getElementById('audioEl');
-      if (el) el.currentTime = next - 0.25;
-    }
+    // 查语音区间表: 最近 3 秒内没有任何语音(音乐/拨号音不算) => 间隔已满 3 秒, 跳到下一句
+    if (hasSpeech(cur - 3, cur - 0.2)) return;
+    const el = document.getElementById('audioEl');
+    if (el) el.currentTime = next - 0.25;
   }
 
   function highlightLine(time) {
@@ -1617,7 +1643,17 @@ body.no-cn .line-text-cn { display: none; }
 
     if (repeat.active && repeat.lineIdx !== idx) cancelRepeat(false);
     el.currentTime = act.lines[idx].t;
-    if (!audioPlaying) { togglePlay(); }
+    if (!audioPlaying) {
+      // 直接从点击句播放; 不走 togglePlay 的跳片头逻辑(它会把刚设置的 seek 覆盖掉)
+      const p = el.play();
+      if (p && typeof p.then === 'function') {
+        p.then(() => { audioPlaying = true; updatePlayIcon(); })
+         .catch(() => { audioPlaying = false; updatePlayIcon(); });
+      } else {
+        audioPlaying = true;
+      }
+      updatePlayIcon();
+    }
   }
 
   // ===== COMPLETE =====
