@@ -20547,34 +20547,59 @@
               "cn": "好 Jane。音乐开始。"
             },
             {
-              "t": 55.85,
-              "en": "Dearly beloved, we are gathered here today to join this man and this woman in holy matrimony. Do either of you have any reason why you should not legally be joined in marriage? Is there anyone present who can show any just cause why these two people should not be legally joined in marriage? Then, Harry Bennett, do you take Susan Stewart to be your lawful, wedded wife?",
-              "cn": "亲爱的各位，今天我们聚在这里，见证这位男士和这位女士缔结神圣的婚姻。你们两位是否有任何理由……（原稿此句未完）在座是否有人能提出任何正当理由，说明这两位不应合法结婚？那么，Harry Bennett，你愿意接受 Susan Stewart 作为你的合法妻子吗？"
+              "t": 108.59,
+              "en": "Dearly beloved, we are gathered here today to join this man and this woman in holy matrimony.",
+              "cn": "亲爱的各位，今天我们聚在这里，见证这位男士和这位女士缔结神圣的婚姻。"
             },
             {
-              "t": 58.35,
+              "t": 117.97,
+              "en": "Do either of you have any reason why you should not legally be joined in marriage?",
+              "cn": "你们两位是否有任何理由，不应该在法律上结为夫妻？"
+            },
+            {
+              "t": 125.49,
+              "en": "Is there anyone present who can show any just cause why these two people should not be legally joined in marriage?",
+              "cn": "在座是否有人能提出任何正当理由，说明这两位不应合法结婚？"
+            },
+            {
+              "t": 135.64,
+              "en": "Then, Harry Bennett, do you take Susan Stewart to be your lawful, wedded wife?",
+              "cn": "那么，Harry Bennett，你愿意接受 Susan Stewart 作为你的合法妻子吗？"
+            },
+            {
+              "t": 144.06,
               "en": "I do.",
               "cn": "我愿意。"
             },
             {
-              "t": 60.85,
+              "t": 146.37,
               "en": "And you, Susan Stewart, do you take Harry Bennett to be your lawful, wedded husband?",
               "cn": "Susan Stewart，你愿意接受 Harry Bennett 作为你的合法丈夫吗？"
             },
             {
-              "t": 63.35,
-              "en": "I do",
+              "t": 153.79,
+              "en": "I do.",
               "cn": "我愿意。"
             },
             {
-              "t": 65.85,
-              "en": "The rings, please. Richard  I have them, Harry.",
-              "cn": "请把戒指拿来。在我这 Harry。"
+              "t": 155.48,
+              "en": "The rings, please.",
+              "cn": "请把戒指拿来。"
             },
             {
-              "t": 68.35,
-              "en": "By the power vested in me by the laws of the State of New York, I now pronounce you husband and wife. You may kiss the bride now, Harry.",
-              "cn": "凭借纽约州法律赋予我的权力，我现在宣布你们结为夫妻。你可以吻新娘了 Harry。"
+              "t": 160.02,
+              "en": "I have them, Harry.",
+              "cn": "在我这，Harry。"
+            },
+            {
+              "t": 187.46,
+              "en": "By the power vested in me by the laws of the State of New York, I now pronounce you husband and wife.",
+              "cn": "凭借纽约州法律赋予我的权力，我现在宣布你们结为夫妻。"
+            },
+            {
+              "t": 196.38,
+              "en": "You may kiss the bride now, Harry.",
+              "cn": "你可以吻新娘了，Harry。"
             }
           ]
         }
