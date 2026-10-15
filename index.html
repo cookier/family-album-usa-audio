@@ -1489,44 +1489,25 @@ body.no-cn .line-text-cn { display: none; }
     return validActs[currentActIdx] || null;
   }
 
-  // ===== 语音区间表（离线 silero VAD 预生成, episodes.json 每幕 speech 字段） =====
-  // 判断"有没有人在说话"而不是"有没有声音"——音乐/拨号音不算语音, 号码慢读算
-  function actSpeech() {
-    const act = currentAct();
-    return (act && act.speech) || null;
-  }
-  function hasSpeech(a, b) {
-    const iv = actSpeech();
-    if (!iv) return true; // 无数据: 不跳(安全)
-    for (let k = 0; k < iv.length; k++) {
-      if (iv[k][1] > a && iv[k][0] < b) return true;
+  // ===== 句间隔: 实时估算朗读时长(数字逐位读出按 0.45s/个, 其余 13 字符/秒, 底数 1.2s) =====
+  function lineSpeechDur(line) {
+    let digits = 0, letters = 0;
+    for (const c of line.en) {
+      if (c >= '0' && c <= '9') digits++;
+      else if (/[A-Za-z']/.test(c)) letters++;
     }
-    return false;
-  }
-  function lastSpeechEnd(i, from) {
-    const iv = actSpeech();
-    if (!iv) return null;
-    let end = null;
-    for (let k = 0; k < iv.length; k++) {
-      if (iv[k][1] > from && iv[k][0] < from + 25) {
-        if (end === null || iv[k][1] > end) end = iv[k][1];
-      }
-    }
-    return end;
+    return 1.2 + letters / 13 + digits * 0.45;
   }
 
   function lineEndIdx(act, i) {
-    // 句尾：非末句=下一句开始前 0.15s；末句=实测语音结束点+0.8s（无数据时退回估算）
+    // 句尾：非末句=下一句开始前 0.15s；末句=估算时长+1s（避免复读进片尾长音）
     const t0 = act.lines[i].t;
     if (i + 1 < act.lines.length) {
       return Math.max(t0 + 0.4, act.lines[i + 1].t - 0.15);
     }
     const el = document.getElementById('audioEl');
     const dur = (el && isFinite(el.duration)) ? el.duration : Infinity;
-    const se = lastSpeechEnd(i, t0);
-    if (se) return Math.min(se + 0.8, dur - 0.2);
-    const est = Math.max(2, act.lines[i].en.length / 13) + 1;
-    return Math.min(t0 + est, dur - 0.2);
+    return Math.min(t0 + lineSpeechDur(act.lines[i]) + 1, dur - 0.2);
   }
 
   function updateRepeatUI() {
@@ -1594,8 +1575,10 @@ body.no-cn .line-text-cn { display: none; }
     if (i < 0 || i >= lines.length - 1) return;
     const next = lines[i + 1].t;
     if (next - cur <= 3.05) return;
-    // 查语音区间表: 最近 3 秒内没有任何语音(音乐/拨号音不算) => 间隔已满 3 秒, 跳到下一句
-    if (hasSpeech(cur - 3, cur - 0.2)) return;
+    // 超长合并句(多句并一)朗读跨度不可估, 不启用跳过, 宁可不压缩也不切字
+    if (lines[i].en.length > 90) return;
+    // 当前句朗读估算时长 + 3 秒间隔后才跳
+    if (cur < lines[i].t + lineSpeechDur(lines[i]) + 3) return;
     const el = document.getElementById('audioEl');
     if (el) el.currentTime = next - 0.25;
   }
